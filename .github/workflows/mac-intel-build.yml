@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15-intel
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
 
@@ -26,7 +26,6 @@ jobs:
 
       - name: Run DSP tests
         run: ./build/HeritageDSPTests
-
       - name: Ad-hoc sign and package
         run: |
           plugin="build/HeritageChannel_artefacts/Release/VST3/Heritage Channel.vst3"
