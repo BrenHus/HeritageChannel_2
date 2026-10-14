@@ -7,25 +7,24 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
 
       - name: Configure Intel release
-        run: >
+        run: >-
           cmake -S . -B build
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_OSX_ARCHITECTURES=x86_64
           -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
           -DHERITAGE_BUILD_TESTS=ON
-          -DCMAKE_C_FLAGS="-D__MAC_OS_X_VERSION_MAX_ALLOWED=140000"
-          -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MAX_ALLOWED=140000"
 
       - name: Build plug-in and tests
         run: cmake --build build --config Release --parallel 3
 
       - name: Run DSP tests
         run: ./build/HeritageDSPTests
+
       - name: Ad-hoc sign and package
         run: |
           plugin="build/HeritageChannel_artefacts/Release/VST3/Heritage Channel.vst3"
