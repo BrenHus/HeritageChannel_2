@@ -7,17 +7,19 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15-intel
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure Intel release
-        run: >-
+            - name: Configure Intel release
+        run: >
           cmake -S . -B build
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_OSX_ARCHITECTURES=x86_64
           -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
           -DHERITAGE_BUILD_TESTS=ON
+          -DCMAKE_C_FLAGS="-D__MAC_OS_X_VERSION_MAX_ALLOWED=140000"
+          -DCMAKE_CXX_FLAGS="-D__MAC_OS_X_VERSION_MAX_ALLOWED=140000"
 
       - name: Build plug-in and tests
         run: cmake --build build --config Release --parallel 3
