@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-          - name: Configure Intel release
+      - name: Configure Intel release
         run: >
           cmake -S . -B build
           -DCMAKE_BUILD_TYPE=Release
