@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
-project(HeritageChannel VERSION 0.2.0 LANGUAGES CXX)
+project(HeritageChannel VERSION 0.2.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,9 +10,19 @@ if(DEFINED JUCE_DIR AND EXISTS "${JUCE_DIR}/CMakeLists.txt")
     add_subdirectory("${JUCE_DIR}" JUCE)
 else()
     include(FetchContent)
+
+    # JUCE 7 does not compile against the macOS 15 SDK because it calls an
+    # API that Apple made unavailable. Use current JUCE on macOS, while
+    # retaining JUCE 7 for the legacy Windows 7 build.
+    if(APPLE)
+        set(HERITAGE_JUCE_TAG 8.0.15)
+    else()
+        set(HERITAGE_JUCE_TAG 7.0.12)
+    endif()
+
     FetchContent_Declare(juce
         GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
-        GIT_TAG 7.0.12
+        GIT_TAG ${HERITAGE_JUCE_TAG}
         GIT_SHALLOW TRUE)
     FetchContent_MakeAvailable(juce)
 endif()
@@ -26,6 +36,8 @@ juce_add_plugin(HeritageChannel
     PRODUCT_NAME "Heritage Channel"
     DESCRIPTION "Analogue console, valve compressor and multitrack tape signal flow"
     VST3_CATEGORIES Fx Dynamics EQ)
+
+juce_generate_juce_header(HeritageChannel)
 
 if(APPLE)
     set_target_properties(HeritageChannel PROPERTIES
