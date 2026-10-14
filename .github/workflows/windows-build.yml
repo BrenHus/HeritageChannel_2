@@ -1,0 +1,26 @@
+name: Windows 7 x64 VST3
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NSIS
+        shell: powershell
+        run: choco install nsis --yes --no-progress
+      - name: Build VST3 and installer
+        shell: powershell
+        run: .\scripts\build-windows.ps1 -VisualStudio 2022
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeritageChannel-Win64
+          path: |
+            installer/HeritageChannel-Win64-Setup.exe
+            build/HeritageChannel_artefacts/Release/VST3/Heritage Channel.vst3
+            build/HeritageChannel_artefacts/Release/VST3/Heritage Channel.vst3/**

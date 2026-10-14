@@ -1,0 +1,5 @@
+/build/
+/build-local/
+/third_party/
+*.exe
+*.vst3
